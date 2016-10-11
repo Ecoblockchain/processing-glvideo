@@ -393,6 +393,8 @@ JNIEXPORT jlong JNICALL Java_gohai_glvideo_GLVideo_gstreamer_1open_1pipeline
 #ifdef __APPLE__
     if (!gst_display) {
       gst_display = gst_gl_display_new ();
+    } else {
+      g_object_ref (gst_display);
     }
     state->gl_context =
       gst_gl_context_new_wrapped (GST_GL_DISPLAY (gst_display),
@@ -400,6 +402,8 @@ JNIEXPORT jlong JNICALL Java_gohai_glvideo_GLVideo_gstreamer_1open_1pipeline
 #elif GLES2
     if (!gst_display) {
       gst_display = gst_digst_gl_display_egl_new_with_egl_display (display);
+    } else {
+      g_object_ref (gst_display);
     }
     state->gl_context =
       gst_gl_context_new_wrapped (GST_GL_DISPLAY (gst_display),
@@ -407,6 +411,8 @@ JNIEXPORT jlong JNICALL Java_gohai_glvideo_GLVideo_gstreamer_1open_1pipeline
 #else
     if (!gst_display) {
       gst_display = gst_gl_display_x11_new_with_display (display);
+    } else {
+      g_object_ref (gst_display);
     }
     state->gl_context =
       gst_gl_context_new_wrapped (GST_GL_DISPLAY (gst_display),
@@ -644,8 +650,7 @@ JNIEXPORT void JNICALL Java_gohai_glvideo_GLVideo_gstreamer_1close
     g_mutex_unlock (&state->buffer_lock);
 
     gst_object_unref (state->gl_context);
-    // XXX
-    //gst_object_unref (gst_display);
+    gst_object_unref (gst_display);
 
     gst_object_unref (state->vsink);
     gst_object_unref (state->pipeline);
