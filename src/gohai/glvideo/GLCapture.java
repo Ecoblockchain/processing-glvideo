@@ -36,7 +36,7 @@ public class GLCapture extends GLVideo {
     if (PApplet.platform == LINUX) {
       pipeline = "v4l2src device=/dev/video";
     } else if (PApplet.platform == MACOSX) {
-      pipeline = "qtkitvideosrc device-index=";
+      pipeline = "avfvideosrc device-index=";
     } else {
       throw new RuntimeException("Currently not supported on Windows");
     }
